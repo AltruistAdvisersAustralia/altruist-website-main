@@ -65,6 +65,17 @@ ul.nl a:hover,ul.nl a.act{color:#FFCD00;border-bottom-color:#FFCD00}
 }
 .nb-book:hover{background:#FFD740!important}
 
+.nb-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  width:44px;height:44px;padding:8px;
+  flex-direction:column;justify-content:center;align-items:center;gap:5px;
+}
+.nb-toggle span{display:block;width:26px;height:2px;background:#fff;transition:transform 0.25s,opacity 0.25s}
+.nb-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nb-toggle.open span:nth-child(2){opacity:0}
+.nb-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+
 /* BUTTONS */
 .btn{display:inline-block;background:#FFCD00;color:#002F15;
   font-size:0.74rem;font-weight:700;letter-spacing:0.12em;
@@ -174,8 +185,21 @@ footer{background:#002F15;border-top:3px solid #FFCD00;padding:56px 60px 28px}
 .ft-copy-lks a:hover{color:#FFCD00}
 
 @media(max-width:960px){
+  .nb-toggle{display:flex}
+  ul.nl{
+    display:none;position:fixed;top:100px;left:0;right:0;bottom:0;
+    background:#002F15;flex-direction:column;align-items:stretch;
+    gap:0;padding:12px 0;overflow-y:auto;z-index:299;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  ul.nl.open{display:flex}
+  ul.nl li{width:100%}
+  ul.nl a{display:block;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.06)}
+  ul.nl a.nb-book{margin:12px 24px;text-align:center;padding:14px 24px}
+}
+@media(max-width:960px){
   nav{padding:0 20px}
-  ul.nl{display:none}
+  /* mobile nav replaces this */
   .sec,.sec-off,.sec-grn,.sec-dark{padding:60px 24px}
   .book-strip{flex-direction:column;padding:32px 24px;text-align:center}
   footer{padding:48px 24px 24px}
@@ -298,6 +322,7 @@ footer{background:#002F15;border-top:3px solid #FFCD00;padding:56px 60px 28px}
   <div class="nb">
     <img src="assets/altruist-logo.jpg" alt="Altruist Advisers Australia" class="nb-logo">
   </div>
+  <button type="button" id="nb-toggle" class="nb-toggle" aria-label="Toggle navigation menu"><span></span><span></span><span></span></button>
   <ul class="nl"><li><a href="index.html" class="">Home</a></li><li><a href="about.html" class="act">About</a></li><li><a href="advice.html" class="">Advice Options</a></li><li><a href="process.html" class="">How It Works</a></li><li><a href="insights.html" class="">Insights</a></li><li><a href="important.html" class="">Important Information</a></li>
     <li><a href="contact.html" class="nb-book">Get in Touch</a></li>
   </ul>
@@ -482,6 +507,22 @@ const io = new IntersectionObserver(es=>{
   es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
 },{threshold:0.08})
 document.querySelectorAll('.rv,.rl,.rr').forEach(el=>io.observe(el))
+</script>
+<script>
+const navToggle = document.getElementById('nb-toggle')
+const navMenu = document.querySelector('ul.nl')
+if (navToggle && navMenu) {
+  navToggle.addEventListener('click', function(){
+    navToggle.classList.toggle('open')
+    navMenu.classList.toggle('open')
+  })
+  navMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navToggle.classList.remove('open')
+      navMenu.classList.remove('open')
+    })
+  })
+}
 </script>
 </body>
 </html>
